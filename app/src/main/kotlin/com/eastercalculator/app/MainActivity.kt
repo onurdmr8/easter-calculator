@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eastercalculator.app.ui.MainAppScreen
+import com.eastercalculator.app.ui.screens.CalculatorViewModel
 import com.eastercalculator.app.ui.theme.EasterCalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +24,11 @@ class MainActivity : ComponentActivity() {
           modifier = Modifier.fillMaxSize(),
           color = MaterialTheme.colorScheme.background
         ) {
-          MainAppScreen()
+          val app = application
+          val vm: CalculatorViewModel = viewModel {
+            CalculatorViewModel(app)
+          }
+          MainAppScreen(viewModel = vm)
         }
       }
     }

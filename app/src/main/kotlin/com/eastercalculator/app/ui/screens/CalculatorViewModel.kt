@@ -26,10 +26,18 @@ data class CalculatorUiState(
 
 class CalculatorViewModel(
     application: Application,
-    val eggRepository: EasterEggRepository = EasterEggRepository(application),
-    val authRepository: AuthRepository = AuthRepository(application),
-    val leaderboardRepository: LeaderboardRepository = LeaderboardRepository()
+    val eggRepository: EasterEggRepository,
+    val authRepository: AuthRepository,
+    val leaderboardRepository: LeaderboardRepository
 ) : AndroidViewModel(application) {
+
+    // Explicit constructor required by ViewModelProvider reflection
+    constructor(application: Application) : this(
+        application = application,
+        eggRepository = EasterEggRepository(application),
+        authRepository = AuthRepository(application),
+        leaderboardRepository = LeaderboardRepository()
+    )
 
     private val engine = CalculatorEngine()
 
