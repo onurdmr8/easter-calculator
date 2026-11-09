@@ -22,7 +22,16 @@
   - **Matematiksel Paradokslar:** Örneğin `42 ÷ 0` veya `x ÷ 0` yaptığınızda hata vermek yerine **Kozmik Karadelik (🌌)** açılır!
 
 ### 4. 🏆 Başarım Tablosu & Emoji Kodeksi (Achievement Codex)
-Bulunacak tüm emojiler nadirlik derecelerine göre puanlandırılmıştır:
+Bulunacak tüm emojiler nadirlik derecelerine ve rastlantısal oranlarına göre puanlandırılmıştır:
+- 🧬 **Tanrı Parçacıkları / God Particles (20/1 - 100.000/1 Rastgele Oran) -> 50 - 100,000 Puan**:
+  Her `=` (hesaplama) işleminde tamamen rastgele olasılıklarla düşen en yüksek puanlı kategori:
+  - 🧬 *Higgs Bozonu: Tanrı Parçacığı* (`100.000/1 Oran` -> **+100,000 Puan**)
+  - 🌀 *Tekillik Özü* (`50.000/1 Oran` -> **+50,000 Puan**)
+  - ⚡ *Takyon Fırtınası* (`10.000/1 Oran` -> **+25,000 Puan**)
+  - 🌑 *Karanlık Madde Kristali* (`2.500/1 Oran` -> **+7,500 Puan**)
+  - 💥 *Antimadde Çekirdeği* (`500/1 Oran` -> **+2,500 Puan**)
+  - ✨ *Nötrino Sıçraması* (`100/1 Oran` -> **+500 Puan**)
+  - ⚛️ *Kuantum Dalgalanması* (`20/1 Oran` -> **+50 Puan**)
 - 🐣 **Efsanevi / Mythic (%3 Oran) -> 5,000 Puan**: *Altın Paskalya Yumurtası, Kozmik Süpernova, Aylık Gizem Kupası.*
 - 🌌 **Epik / Epic (%7 Oran) -> 1,500 Puan**: *Kozmik Karadelik, Kızıl Ejderha, Zamanın Efendisi (2026), Büyücü Merdiveni.*
 - 🤖 **Nadir / Rare (%15 Oran) -> 600 Puan**: *Günün Gizli Kodu, 1337 Elite Hacker, Pi Sonsuzluğu (3.1415), 51. Bölge (51×51).*
@@ -38,6 +47,13 @@ Bulunacak tüm emojiler nadirlik derecelerine göre puanlandırılmıştır:
 - **Google ile Giriş Yap:** Tek tıkla skorunu ve bulduğun yumurtaları Google hesabına bağla.
 - **E-posta & Şifre ile Kayıt / Giriş:** Özel kullanıcı adı ve şifreyle üye ol.
 - **Avatar Seçici:** Profilinde istediğin emoji avatarını kullan!
+
+### 7. 💰 Google AdMob & Ödüllü Reklam Sistemi (Monetization)
+Google Play Store politikalarına ve en yüksek kullanıcı memnuniyetine uygun, hesaplama deneyimini bölmeyen reklam modeli:
+- ⚡ **Kozmik Şans Katlayıcı (Rewarded Ad):** Kullanıcı kısa bir ödüllü video izleyerek sonraki **15 hesaplamada Tanrı Parçacığı düşme şansını 5 katına (5x Luck)** çıkarır.
+- 🎬 **Gizli Formül İpucu Açma (Rewarded Ad):** Henüz keşfedilmemiş gizli bir Easter Egg formülünü öğrenmek için ödüllü video izleme imkanı.
+- 🪧 **Adaptive Banner Reklam:** Ekranın alt kısmında kullanıcıyı rahatsız etmeden pasif gelir sağlayan sabit banner alanı.
+- 🧪 *Not: Geliştirme ve test aşamasında Google AdMob'un resmi test kimlikleri (Sample Ad Unit IDs) tanımlıdır. Canlıya çıkarken AdMob panelinizdeki gerçek kimliklerle değiştirmeniz yeterlidir.*
 
 ---
 

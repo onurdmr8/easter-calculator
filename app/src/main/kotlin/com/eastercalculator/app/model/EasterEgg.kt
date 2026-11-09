@@ -13,7 +13,8 @@ enum class Rarity(
     UNCOMMON("Seyrek", 250, "%25", Color(0xFF2196F3), Color(0x662196F3)),
     RARE("Nadir", 600, "%15", Color(0xFF9C27B0), Color(0x669C27B0)),
     EPIC("Epik", 1500, "%7", Color(0xFFFF9800), Color(0x66FF9800)),
-    MYTHIC("Efsanevi", 5000, "%3", Color(0xFFFFD700), Color(0x88FFD700))
+    MYTHIC("Efsanevi", 5000, "%3", Color(0xFFFFD700), Color(0x88FFD700)),
+    GOD_PARTICLE("Tanrı Parçacıkları", 100000, "20/1 - 100.000/1", Color(0xFF00E5FF), Color(0x8800E5FF))
 }
 
 data class EasterEgg(
@@ -24,10 +25,22 @@ data class EasterEgg(
     val rarity: Rarity,
     val hint: String,
     val triggerDescription: String,
+    val customPoints: Int? = null,
+    val oneInChance: Int? = null,
     val isUnlocked: Boolean = false,
     val unlockedAt: Long? = null,
     val unlockedFormula: String? = null
-)
+) {
+    val points: Int
+        get() = customPoints ?: rarity.points
+
+    val oddsText: String
+        get() = if (oneInChance != null) {
+            "${String.format(java.util.Locale.GERMAN, "%,d", oneInChance)}/1 Oran"
+        } else {
+            rarity.dropRateText
+        }
+}
 
 data class Season(
     val id: String,

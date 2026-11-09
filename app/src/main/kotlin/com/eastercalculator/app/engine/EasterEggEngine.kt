@@ -4,8 +4,11 @@ import com.eastercalculator.app.model.EasterEgg
 import com.eastercalculator.app.model.Rarity
 import java.util.Calendar
 import kotlin.math.abs
+import kotlin.random.Random
 
-class EasterEggEngine {
+class EasterEggEngine(
+    private val random: Random = Random.Default
+) {
 
     val currentSeasonId: String
     val currentDailySecret: Int
@@ -24,6 +27,85 @@ class EasterEggEngine {
 
     fun getAllEasterEggs(): List<EasterEgg> {
         return listOf(
+            // === TANRI PARÇACIKLARI (20/1 - 100.000/1 Rastgele Oran • 50 - 100,000 Puan) ===
+            EasterEgg(
+                id = "god_higgs_boson",
+                emoji = "🧬",
+                title = "Higgs Bozonu: Tanrı Parçacığı",
+                description = "Evrene kütle kazandıran mutlak parçacık! İmkansıza yakın rastlantısallığı yakaladın!",
+                rarity = Rarity.GOD_PARTICLE,
+                hint = "Her hesaplamada tamamen rastgele 100.000/1 olasılıkla ortaya çıkar.",
+                triggerDescription = "Rastgele Yakalama Oranı: 100.000/1",
+                customPoints = 100000,
+                oneInChance = 100000
+            ),
+            EasterEgg(
+                id = "god_singularity_core",
+                emoji = "🌀",
+                title = "Tekillik Özü",
+                description = "Uzay-zaman dokusunun tek bir noktaya çöktüğü kozmik çekirdek!",
+                rarity = Rarity.GOD_PARTICLE,
+                hint = "Her hesaplamada tamamen rastgele 50.000/1 olasılıkla ortaya çıkar.",
+                triggerDescription = "Rastgele Yakalama Oranı: 50.000/1",
+                customPoints = 50000,
+                oneInChance = 50000
+            ),
+            EasterEgg(
+                id = "god_tachyon_storm",
+                emoji = "⚡",
+                title = "Takyon Fırtınası",
+                description = "Işık hızını aşan varsayımsal parçacıklar hesap makinenin içinden geçti!",
+                rarity = Rarity.GOD_PARTICLE,
+                hint = "Her hesaplamada tamamen rastgele 10.000/1 olasılıkla ortaya çıkar.",
+                triggerDescription = "Rastgele Yakalama Oranı: 10.000/1",
+                customPoints = 25000,
+                oneInChance = 10000
+            ),
+            EasterEgg(
+                id = "god_dark_matter",
+                emoji = "🌑",
+                title = "Karanlık Madde Kristali",
+                description = "Görünmez evrenin gizemli kütlesi işleminin sonucunda kristalleşti!",
+                rarity = Rarity.GOD_PARTICLE,
+                hint = "Her hesaplamada tamamen rastgele 2.500/1 olasılıkla ortaya çıkar.",
+                triggerDescription = "Rastgele Yakalama Oranı: 2.500/1",
+                customPoints = 7500,
+                oneInChance = 2500
+            ),
+            EasterEgg(
+                id = "god_antimatter_spark",
+                emoji = "💥",
+                title = "Antimadde Çekirdeği",
+                description = "Madde ve antimaddenin saf enerji çarpışması!",
+                rarity = Rarity.GOD_PARTICLE,
+                hint = "Her hesaplamada tamamen rastgele 500/1 olasılıkla ortaya çıkar.",
+                triggerDescription = "Rastgele Yakalama Oranı: 500/1",
+                customPoints = 2500,
+                oneInChance = 500
+            ),
+            EasterEgg(
+                id = "god_neutrino_wave",
+                emoji = "✨",
+                title = "Nötrino Sıçraması",
+                description = "Milyarlarca hayalet parçacıktan biri tam senin işleminle etkileşime girdi!",
+                rarity = Rarity.GOD_PARTICLE,
+                hint = "Her hesaplamada tamamen rastgele 100/1 olasılıkla ortaya çıkar.",
+                triggerDescription = "Rastgele Yakalama Oranı: 100/1",
+                customPoints = 500,
+                oneInChance = 100
+            ),
+            EasterEgg(
+                id = "god_quantum_fluctuation",
+                emoji = "⚛️",
+                title = "Kuantum Dalgalanması",
+                description = "Boşlukta aniden beliren rastgele atom altı enerji dalgası!",
+                rarity = Rarity.GOD_PARTICLE,
+                hint = "Her hesaplamada tamamen rastgele 20/1 olasılıkla ortaya çıkar.",
+                triggerDescription = "Rastgele Yakalama Oranı: 20/1",
+                customPoints = 50,
+                oneInChance = 20
+            ),
+
             // === MYTHIC (%3 Oran - 5,000 Puan) ===
             EasterEgg(
                 id = "mythic_golden_egg",
@@ -234,7 +316,48 @@ class EasterEggEngine {
         )
     }
 
+    fun rollGodParticle(
+        unlockedEggIds: Set<String> = emptySet(),
+        luckBoostMultiplier: Int = 1
+    ): EasterEgg? {
+        val godParticles = getAllEasterEggs()
+            .filter { it.rarity == Rarity.GOD_PARTICLE && it.id !in unlockedEggIds }
+            .sortedByDescending { it.points }
+
+        for (particle in godParticles) {
+            val baseChance = particle.oneInChance ?: continue
+            val effectiveChance = (baseChance / luckBoostMultiplier.coerceAtLeast(1)).coerceAtLeast(1)
+            if (random.nextInt(effectiveChance) == 0) {
+                return particle
+            }
+        }
+        return null
+    }
+
     fun checkEasterEgg(
+        expression: String,
+        numericResult: Double?,
+        isDivisionByZero: Boolean,
+        unlockedEggIds: Set<String> = emptySet(),
+        enableRandomGodParticles: Boolean = true,
+        luckBoostMultiplier: Int = 1
+    ): EasterEgg? {
+        val deterministicEgg = findDeterministicEgg(expression, numericResult, isDivisionByZero)
+        if (deterministicEgg != null && deterministicEgg.id !in unlockedEggIds) {
+            return deterministicEgg
+        }
+
+        if (enableRandomGodParticles && numericResult != null && !numericResult.isNaN() && !numericResult.isInfinite()) {
+            val rolledGodParticle = rollGodParticle(unlockedEggIds, luckBoostMultiplier)
+            if (rolledGodParticle != null) {
+                return rolledGodParticle
+            }
+        }
+
+        return deterministicEgg
+    }
+
+    private fun findDeterministicEgg(
         expression: String,
         numericResult: Double?,
         isDivisionByZero: Boolean
@@ -330,3 +453,4 @@ class EasterEggEngine {
         return null
     }
 }
+

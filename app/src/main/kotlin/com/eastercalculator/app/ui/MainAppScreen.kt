@@ -52,49 +52,56 @@ fun MainAppScreen(
     val eggs by viewModel.eggRepository.eggs.collectAsStateWithLifecycle()
     val unlockedCount = eggs.count { it.isUnlocked }
 
+    val isAdsRemoved by viewModel.billingManager.isAdsRemoved.collectAsStateWithLifecycle()
+
     Scaffold(
         bottomBar = {
-            NavigationBar(
-                containerColor = Color(0xFF161624),
-                tonalElevation = 8.dp
-            ) {
-                NavTab.entries.forEach { tab ->
-                    val isSelected = selectedTab == tab
+            androidx.compose.foundation.layout.Column {
+                if (!isAdsRemoved) {
+                    com.eastercalculator.app.ui.components.AdBannerView()
+                }
+                NavigationBar(
+                    containerColor = Color(0xFF161624),
+                    tonalElevation = 8.dp
+                ) {
+                    NavTab.entries.forEach { tab ->
+                        val isSelected = selectedTab == tab
 
-                    NavigationBarItem(
-                        selected = isSelected,
-                        onClick = { selectedTab = tab },
-                        icon = {
-                            if (tab == NavTab.CODEX && unlockedCount > 0) {
-                                BadgedBox(badge = {
-                                    Badge(
-                                        containerColor = Color(0xFFFF9800),
-                                        contentColor = Color.Black
-                                    ) {
-                                        Text("$unlockedCount", fontWeight = FontWeight.Bold, fontSize = 10.sp)
+                        NavigationBarItem(
+                            selected = isSelected,
+                            onClick = { selectedTab = tab },
+                            icon = {
+                                if (tab == NavTab.CODEX && unlockedCount > 0) {
+                                    BadgedBox(badge = {
+                                        Badge(
+                                            containerColor = Color(0xFFFF9800),
+                                            contentColor = Color.Black
+                                        ) {
+                                            Text("$unlockedCount", fontWeight = FontWeight.Bold, fontSize = 10.sp)
+                                        }
+                                    }) {
+                                        Icon(tab.icon, contentDescription = tab.title)
                                     }
-                                }) {
+                                } else {
                                     Icon(tab.icon, contentDescription = tab.title)
                                 }
-                            } else {
-                                Icon(tab.icon, contentDescription = tab.title)
-                            }
-                        },
-                        label = {
-                            Text(
-                                text = tab.title,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                fontSize = 11.sp
+                            },
+                            label = {
+                                Text(
+                                    text = tab.title,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    fontSize = 11.sp
+                                )
+                            },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color(0xFFFF9800),
+                                selectedTextColor = Color(0xFFFF9800),
+                                unselectedIconColor = Color(0xFF90A4AE),
+                                unselectedTextColor = Color(0xFF90A4AE),
+                                indicatorColor = Color(0xFF232338)
                             )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color(0xFFFF9800),
-                            selectedTextColor = Color(0xFFFF9800),
-                            unselectedIconColor = Color(0xFF90A4AE),
-                            unselectedTextColor = Color(0xFF90A4AE),
-                            indicatorColor = Color(0xFF232338)
                         )
-                    )
+                    }
                 }
             }
         }

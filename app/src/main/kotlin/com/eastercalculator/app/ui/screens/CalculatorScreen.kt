@@ -89,32 +89,77 @@ fun CalculatorScreen(
                     }
                 }
 
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(Color(0xFF1E1E2E))
-                        .clickable { showHintDialog = !showHintDialog }
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Günün İpucu",
-                            tint = Color(0xFF80D8FF),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Günün İpucu",
-                            color = Color(0xFF80D8FF),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    val context = androidx.compose.ui.platform.LocalContext.current
+                    val activity = context as? android.app.Activity
+
+                    // Kozmik Şans Katlayıcı (Rewarded Ad Boost)
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(
+                                if (uiState.luckBoostRemaining > 0) Color(0xFF00E5FF).copy(alpha = 0.2f)
+                                else Color(0xFF1E1E2E)
+                            )
+                            .border(
+                                1.dp,
+                                if (uiState.luckBoostRemaining > 0) Color(0xFF00E5FF) else Color(0xFF333348),
+                                RoundedCornerShape(16.dp)
+                            )
+                            .clickable {
+                                if (activity != null) {
+                                    com.eastercalculator.app.ads.AdManager.showRewardedAd(
+                                        activity = activity,
+                                        onRewardEarned = {
+                                            viewModel.activateLuckBoost(charges = 15, multiplier = 5)
+                                        }
+                                    )
+                                }
+                            }
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "⚡", fontSize = 14.sp)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = if (uiState.luckBoostRemaining > 0) "5x Şans (${uiState.luckBoostRemaining})" else "5x Şans (İzle)",
+                                color = if (uiState.luckBoostRemaining > 0) Color(0xFF00E5FF) else Color(0xFF80D8FF),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color(0xFF1E1E2E))
+                            .clickable { showHintDialog = !showHintDialog }
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = "Günün İpucu",
+                                tint = Color(0xFF80D8FF),
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "İpucu",
+                                color = Color(0xFF80D8FF),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
             }
 
             AnimatedVisibility(visible = showHintDialog) {
+                val context = androidx.compose.ui.platform.LocalContext.current
+                val activity = context as? android.app.Activity
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -126,18 +171,45 @@ fun CalculatorScreen(
                 ) {
                     Column {
                         Text(
-                            text = "💡 Günlük ve Aylık Rastgele Gizemler",
+                            text = "💡 Günlük Gizemler & Tanrı Parçacıkları",
                             color = Color(0xFF80D8FF),
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Bugünün Gizli Sayısı: ${viewModel.eggRepository.engine.currentDailySecret}\nBu sayıyı veya 42÷0 gibi gizli kuralları hesapla, emojileri dök!",
+                            text = "Bugünün Gizli Sayısı: ${viewModel.eggRepository.engine.currentDailySecret}\n⚛️ Tanrı Parçacıkları: Her '=' işleminde 20/1 (+50P) ile 100.000/1 (+100.000P) arasında tamamen rastgele oranlarla düşer! '5x Şans' ile olasılığı katlayabilirsin.",
                             color = Color(0xFFEEEEEE),
                             fontSize = 12.sp,
                             lineHeight = 16.sp
                         )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Color(0xFFFF9800).copy(alpha = 0.2f))
+                                .border(1.dp, Color(0xFFFF9800), RoundedCornerShape(8.dp))
+                                .clickable {
+                                    if (activity != null) {
+                                        com.eastercalculator.app.ads.AdManager.showRewardedAd(
+                                            activity = activity,
+                                            onRewardEarned = {
+                                                viewModel.unlockHintWithReward()
+                                            }
+                                        )
+                                    }
+                                }
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = "🎬 Video İzle: Gizli Bir Easter Egg Formülü Öğren!",
+                                color = Color(0xFFFFB74D),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }
@@ -208,6 +280,52 @@ fun CalculatorScreen(
                     onNavigateToCodex()
                 }
             )
+        }
+
+        uiState.unlockedHintEgg?.let { egg ->
+            androidx.compose.ui.window.Dialog(onDismissRequest = viewModel::dismissHintDialog) {
+                androidx.compose.material3.Card(
+                    shape = RoundedCornerShape(20.dp),
+                    colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = Color(0xFF1E1E2E)),
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = egg.emoji, fontSize = 42.sp)
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = "🔓 Gizli Formül İpucu!",
+                            style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFFFD700)
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = egg.title,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "Nasıl Bulunur: ${egg.triggerDescription}",
+                            color = Color(0xFF80D8FF),
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        androidx.compose.material3.Button(
+                            onClick = viewModel::dismissHintDialog,
+                            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800)),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text("Anladım!", color = Color.Black, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
         }
     }
 }

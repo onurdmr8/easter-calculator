@@ -21,14 +21,18 @@ data class CalculatorUiState(
     val triggeredEgg: EasterEgg? = null,
     val isNewDiscovery: Boolean = false,
     val triggeredFormula: String = "",
-    val dailyHint: String = ""
+    val dailyHint: String = "",
+    val luckBoostRemaining: Int = 0,
+    val luckBoostMultiplier: Int = 1,
+    val unlockedHintEgg: EasterEgg? = null
 )
 
 class CalculatorViewModel(
     application: Application,
     val eggRepository: EasterEggRepository,
     val authRepository: AuthRepository,
-    val leaderboardRepository: LeaderboardRepository
+    val leaderboardRepository: LeaderboardRepository,
+    val billingManager: com.eastercalculator.app.billing.BillingManager
 ) : AndroidViewModel(application) {
 
     // Explicit constructor required by ViewModelProvider reflection
@@ -36,7 +40,8 @@ class CalculatorViewModel(
         application = application,
         eggRepository = EasterEggRepository(application),
         authRepository = AuthRepository(application),
-        leaderboardRepository = LeaderboardRepository()
+        leaderboardRepository = LeaderboardRepository(),
+        billingManager = com.eastercalculator.app.billing.BillingManager(application)
     )
 
     private val engine = CalculatorEngine()
@@ -153,11 +158,18 @@ class CalculatorViewModel(
     }
 
     private fun checkEasterEggTrigger(expression: String, result: CalculationResult) {
+        val currentBoostRemaining = _uiState.value.luckBoostRemaining
+        val currentMultiplier = if (currentBoostRemaining > 0) _uiState.value.luckBoostMultiplier else 1
+
         val egg = eggRepository.engine.checkEasterEgg(
             expression = expression,
             numericResult = result.numericResult,
-            isDivisionByZero = result.isDivisionByZero
+            isDivisionByZero = result.isDivisionByZero,
+            unlockedEggIds = eggRepository.getUnlockedEggIds(),
+            luckBoostMultiplier = currentMultiplier
         )
+
+        val newBoostRemaining = (currentBoostRemaining - 1).coerceAtLeast(0)
 
         if (egg != null) {
             val formula = "$expression = ${result.resultString}"
@@ -167,11 +179,39 @@ class CalculatorViewModel(
                 activeRainEmoji = egg.emoji,
                 triggeredEgg = egg,
                 isNewDiscovery = wasNewlyUnlocked,
-                triggeredFormula = formula
+                triggeredFormula = formula,
+                luckBoostRemaining = newBoostRemaining
             )
 
             syncLeaderboard()
+        } else {
+            _uiState.value = _uiState.value.copy(
+                luckBoostRemaining = newBoostRemaining
+            )
         }
+    }
+
+    fun activateLuckBoost(charges: Int = 15, multiplier: Int = 5) {
+        _uiState.value = _uiState.value.copy(
+            luckBoostRemaining = _uiState.value.luckBoostRemaining + charges,
+            luckBoostMultiplier = multiplier
+        )
+    }
+
+    fun unlockHintWithReward(): EasterEgg? {
+        val unlockedIds = eggRepository.getUnlockedEggIds()
+        val lockedEggs = eggRepository.eggs.value.filter { it.id !in unlockedIds }
+        val candidate = lockedEggs.firstOrNull { it.rarity != com.eastercalculator.app.model.Rarity.GOD_PARTICLE }
+            ?: lockedEggs.firstOrNull()
+
+        if (candidate != null) {
+            _uiState.value = _uiState.value.copy(unlockedHintEgg = candidate)
+        }
+        return candidate
+    }
+
+    fun dismissHintDialog() {
+        _uiState.value = _uiState.value.copy(unlockedHintEgg = null)
     }
 
     fun dismissCelebration() {

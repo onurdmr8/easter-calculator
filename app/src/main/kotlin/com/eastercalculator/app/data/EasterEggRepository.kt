@@ -65,7 +65,7 @@ class EasterEggRepository(
             val formula = if (isUnlocked) prefs.getString("${seasonPrefix}egg_${egg.id}_formula", null) else null
 
             if (isUnlocked) {
-                scoreAccumulator += egg.rarity.points
+                scoreAccumulator += egg.points
             }
 
             egg.copy(
@@ -106,7 +106,7 @@ class EasterEggRepository(
         currentEggs[index] = updatedEgg
         _eggs.value = currentEggs
 
-        val newScore = _totalScore.value + updatedEgg.rarity.points
+        val newScore = _totalScore.value + updatedEgg.points
         _totalScore.value = newScore
 
         return true
@@ -114,5 +114,9 @@ class EasterEggRepository(
 
     fun getUnlockedCount(): Int {
         return _eggs.value.count { it.isUnlocked }
+    }
+
+    fun getUnlockedEggIds(): Set<String> {
+        return _eggs.value.filter { it.isUnlocked }.map { it.id }.toSet()
     }
 }

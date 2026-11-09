@@ -50,6 +50,8 @@ class LeaderboardRepository {
 
     private fun getBadgeTitle(score: Int, count: Int): String {
         return when {
+            score >= 100000 -> "Tanrı Parçacığı Efendisi 🧬"
+            score >= 30000 -> "Kuantum Hükümdarı ⚛️"
             score >= 15000 -> "Kozmik Büyükusta 🏆"
             score >= 10000 -> "Efsanevi Yumurta Avcısı 🐣"
             score >= 5000 -> "Kıdemli Sayı Kaşifi 🌟"

@@ -269,11 +269,17 @@ private fun CodexItemCard(egg: EasterEgg) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val displayTitle = when {
+                        egg.isUnlocked -> egg.title
+                        egg.rarity == Rarity.GOD_PARTICLE -> "${egg.title} (Kilitli)"
+                        else -> "??? (Kilitli)"
+                    }
                     Text(
-                        text = if (egg.isUnlocked) egg.title else "??? (Kilitli)",
+                        text = displayTitle,
                         fontWeight = FontWeight.Bold,
                         color = if (egg.isUnlocked) Color.White else Color(0xFF9E9E9E),
-                        fontSize = 15.sp
+                        fontSize = 15.sp,
+                        modifier = Modifier.weight(1f, fill = false)
                     )
 
                     Box(
@@ -282,8 +288,13 @@ private fun CodexItemCard(egg: EasterEgg) {
                             .background(egg.rarity.color.copy(alpha = 0.2f))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
+                        val badgeLabel = if (egg.oneInChance != null) {
+                            "${egg.oddsText} • +${egg.points}P"
+                        } else {
+                            "${egg.rarity.title} • +${egg.points}P"
+                        }
                         Text(
-                            text = "${egg.rarity.title} • +${egg.rarity.points}P",
+                            text = badgeLabel,
                             color = egg.rarity.color,
                             fontWeight = FontWeight.Bold,
                             fontSize = 10.sp

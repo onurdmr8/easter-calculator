@@ -185,7 +185,9 @@ fun ProfileScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        RemoveAdsCard(viewModel = viewModel)
+        Spacer(modifier = Modifier.height(16.dp))
 
         if (user?.isAnonymous == true) {
             Card(
@@ -482,6 +484,82 @@ private fun EmailAuthDialog(
 
                 TextButton(onClick = onDismiss) {
                     Text("Vazgeç", color = Color(0xFF80D8FF))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RemoveAdsCard(viewModel: CalculatorViewModel) {
+    val isAdsRemoved by viewModel.billingManager.isAdsRemoved.collectAsStateWithLifecycle()
+    val productPrice by viewModel.billingManager.productPrice.collectAsStateWithLifecycle()
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val activity = context as? android.app.Activity
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E2E)),
+        border = androidx.compose.foundation.BorderStroke(
+            1.dp,
+            if (isAdsRemoved) Color(0xFF4CAF50) else Color(0xFFFFD700).copy(alpha = 0.5f)
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = if (isAdsRemoved) "✨" else "💎", fontSize = 18.sp)
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = if (isAdsRemoved) "Reklamsız Premium Sürüm" else "Reklamları Kaldır",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = if (isAdsRemoved) "Tüm banner reklamlar kaldırıldı. Teşekkürler!" else "Banner reklamları tamamen kaldır ve kesintisiz hesapla.",
+                    color = Color(0xFFB0BEC5),
+                    fontSize = 12.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            if (isAdsRemoved) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFF4CAF50).copy(alpha = 0.2f))
+                        .border(1.dp, Color(0xFF4CAF50), RoundedCornerShape(12.dp))
+                        .padding(horizontal = 10.dp, vertical = 6.dp)
+                ) {
+                    Text(text = "Aktif ✓", color = Color(0xFF81C784), fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                }
+            } else {
+                Button(
+                    onClick = {
+                        if (activity != null) {
+                            viewModel.billingManager.launchBillingFlow(activity)
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFD700)),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = productPrice ?: "Satın Al",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
+                    )
                 }
             }
         }

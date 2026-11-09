@@ -78,4 +78,54 @@ class EasterEggEngineTest {
         assertEquals("🐣", egg?.emoji)
         assertEquals(Rarity.MYTHIC, egg?.rarity)
     }
+
+    @Test
+    fun testGodParticlesHaveCorrectOddsAndPoints() {
+        val godParticles = easterEggEngine.getAllEasterEggs()
+            .filter { it.rarity == Rarity.GOD_PARTICLE }
+
+        assertEquals(7, godParticles.size)
+
+        val higgs = godParticles.first { it.id == "god_higgs_boson" }
+        assertEquals(100000, higgs.points)
+        assertEquals(100000, higgs.oneInChance)
+        assertEquals("100.000/1 Oran", higgs.oddsText)
+
+        val quantum = godParticles.first { it.id == "god_quantum_fluctuation" }
+        assertEquals(50, quantum.points)
+        assertEquals(20, quantum.oneInChance)
+        assertEquals("20/1 Oran", quantum.oddsText)
+    }
+
+    @Test
+    fun testGodParticleRollTriggersWhenRandomHitsZero() {
+        val alwaysZeroRandom = object : kotlin.random.Random() {
+            override fun nextBits(bitCount: Int): Int = 0
+            override fun nextInt(until: Int): Int = 0
+        }
+        val deterministicGodEngine = EasterEggEngine(random = alwaysZeroRandom)
+
+        // First roll hits the highest-point locked God Particle (Higgs Boson: 100,000 points)
+        val firstRoll = deterministicGodEngine.checkEasterEgg(
+            expression = "12+34",
+            numericResult = 46.0,
+            isDivisionByZero = false,
+            unlockedEggIds = emptySet()
+        )
+        assertNotNull(firstRoll)
+        assertEquals("god_higgs_boson", firstRoll?.id)
+        assertEquals(Rarity.GOD_PARTICLE, firstRoll?.rarity)
+        assertEquals(100000, firstRoll?.points)
+
+        // When Higgs Boson is already unlocked, next roll hits the next tier (Singularity Core: 50,000 points)
+        val secondRoll = deterministicGodEngine.checkEasterEgg(
+            expression = "12+34",
+            numericResult = 46.0,
+            isDivisionByZero = false,
+            unlockedEggIds = setOf("god_higgs_boson")
+        )
+        assertNotNull(secondRoll)
+        assertEquals("god_singularity_core", secondRoll?.id)
+        assertEquals(50000, secondRoll?.points)
+    }
 }

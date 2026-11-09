@@ -57,6 +57,10 @@ dependencies {
   implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+  // Google Mobile Ads (AdMob) & In-App Billing
+  implementation(libs.play.services.ads)
+  implementation(libs.play.billing)
+
   // Compose
   implementation(libs.androidx.compose.ui)
   implementation(libs.androidx.compose.ui.tooling.preview)

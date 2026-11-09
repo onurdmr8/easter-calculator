@@ -133,7 +133,7 @@ fun EggUnlockedDialog(
                                 .padding(horizontal = 10.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = "${egg.rarity.title} (${egg.rarity.dropRateText})",
+                                text = "${egg.rarity.title} (${egg.oddsText})",
                                 color = egg.rarity.color,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 12.sp
@@ -157,7 +157,7 @@ fun EggUnlockedDialog(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "+${egg.rarity.points} Puan",
+                                    text = "+${egg.points} Puan",
                                     color = Color(0xFFFFD700),
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 12.sp
