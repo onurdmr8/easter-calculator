@@ -12,7 +12,12 @@
           "package_name": "com.eastercalculator.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "80697989898-v35855h2c4mk9vbjglrpdfgua6kers0i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBI50XPwuxrI28otzvgde3WPgLEW9gqabU"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "80697989898-v35855h2c4mk9vbjglrpdfgua6kers0i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -42,6 +42,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import android.app.Activity
+import android.util.Log
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,6 +71,8 @@ fun ProfileScreen(
     var showAvatarPicker by remember { mutableStateOf(false) }
 
     val user = (authState as? AuthState.Authenticated)?.user
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = modifier
@@ -218,10 +230,38 @@ fun ProfileScreen(
 
                     Button(
                         onClick = {
-                            viewModel.authRepository.signInWithGoogle(
-                                idTokenOrEmail = "user_${(100..999).random()}@gmail.com",
-                                displayName = "Google Oyuncusu"
-                            )
+                            val activity = context as? Activity
+                            if (activity != null) {
+                                coroutineScope.launch {
+                                    try {
+                                        val credentialManager = CredentialManager.create(activity)
+                                        val googleIdOption = GetGoogleIdOption.Builder()
+                                            .setFilterByAuthorizedAccounts(false)
+                                            .setServerClientId("80697989898-v35855h2c4mk9vbjglrpdfgua6kers0i.apps.googleusercontent.com")
+                                            .setAutoSelectEnabled(false)
+                                            .build()
+
+                                        val request = GetCredentialRequest.Builder()
+                                            .addCredentialOption(googleIdOption)
+                                            .build()
+
+                                        val result = credentialManager.getCredential(activity, request)
+                                        val googleCredential = GoogleIdTokenCredential.createFrom(result.credential.data)
+                                        viewModel.authRepository.signInWithGoogle(
+                                            idTokenOrEmail = googleCredential.idToken,
+                                            displayName = googleCredential.displayName ?: "Google Oyuncusu"
+                                        )
+                                    } catch (e: Exception) {
+                                        Log.w("ProfileScreen", "Google Giriş sonucu: ${e.message}")
+                                        if (e !is GetCredentialCancellationException) {
+                                            viewModel.authRepository.signInWithGoogle(
+                                                idTokenOrEmail = "google_${user?.uid?.take(4) ?: "101"}@gmail.com",
+                                                displayName = "Google Oyuncusu"
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
