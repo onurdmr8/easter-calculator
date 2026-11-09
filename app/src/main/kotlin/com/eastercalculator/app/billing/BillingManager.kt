@@ -105,7 +105,8 @@ class BillingManager(
             .setProductList(productList)
             .build()
 
-        billingClient.queryProductDetailsAsync(params) { billingResult, queryProductDetailsList ->
+        billingClient.queryProductDetailsAsync(params) { billingResult, queryProductDetailsResult ->
+            val queryProductDetailsList = queryProductDetailsResult.productDetailsList
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && queryProductDetailsList.isNotEmpty()) {
                 val details = queryProductDetailsList.first()
                 val price = details.oneTimePurchaseOfferDetails?.formattedPrice
@@ -132,7 +133,8 @@ class BillingManager(
             .setProductList(productList)
             .build()
 
-        billingClient.queryProductDetailsAsync(params) { billingResult, queryProductDetailsList ->
+        billingClient.queryProductDetailsAsync(params) { billingResult, queryProductDetailsResult ->
+            val queryProductDetailsList = queryProductDetailsResult.productDetailsList
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && queryProductDetailsList.isNotEmpty()) {
                 val productDetails = queryProductDetailsList.first()
                 val flowParams = BillingFlowParams.newBuilder()
