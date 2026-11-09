@@ -319,8 +319,8 @@ fun ProfileScreen(
                 title = "Yeni Hesap Oluştur",
                 isRegister = true,
                 onDismiss = { showEmailRegisterDialog = false },
-                onSubmit = { name, email, _ ->
-                    viewModel.authRepository.registerWithEmail(name = name, email = email)
+                onSubmit = { name, email, password ->
+                    viewModel.authRepository.registerWithEmail(name = name, email = email, password = password)
                     showEmailRegisterDialog = false
                 }
             )
@@ -331,10 +331,10 @@ fun ProfileScreen(
                 title = "Giriş Yap",
                 isRegister = false,
                 onDismiss = { showEmailLoginDialog = false },
-                onSubmit = { _, email, _ ->
-                    viewModel.authRepository.registerWithEmail(
-                        name = email.substringBefore("@"),
-                        email = email
+                onSubmit = { _, email, password ->
+                    viewModel.authRepository.signInWithEmail(
+                        email = email,
+                        password = password
                     )
                     showEmailLoginDialog = false
                 }

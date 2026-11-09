@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "80697989898",
+    "project_id": "easter-calculator",
+    "storage_bucket": "easter-calculator.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80697989898:android:254850b0cb5b4db73238f3",
+        "android_client_info": {
+          "package_name": "com.eastercalculator.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBI50XPwuxrI28otzvgde3WPgLEW9gqabU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

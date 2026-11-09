@@ -2,6 +2,7 @@ package com.eastercalculator.app.ui.screens
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.eastercalculator.app.data.AuthRepository
 import com.eastercalculator.app.data.EasterEggRepository
 import com.eastercalculator.app.data.LeaderboardRepository
@@ -12,6 +13,7 @@ import com.eastercalculator.app.model.EasterEgg
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 data class CalculatorUiState(
     val expression: String = "",
@@ -54,7 +56,11 @@ class CalculatorViewModel(
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()
 
     init {
-        syncLeaderboard()
+        viewModelScope.launch {
+            authRepository.authState.collect {
+                syncLeaderboard()
+            }
+        }
     }
 
     private fun syncLeaderboard() {

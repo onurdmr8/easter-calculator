@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.google.services)
 }
 
 android {
@@ -60,6 +61,16 @@ dependencies {
   // Google Mobile Ads (AdMob) & In-App Billing
   implementation(libs.play.services.ads)
   implementation(libs.play.billing)
+
+  // Firebase (Auth, Firestore) & Google Sign-In
+  val firebaseBom = platform(libs.firebase.bom)
+  implementation(firebaseBom)
+  implementation(libs.firebase.auth)
+  implementation(libs.firebase.firestore)
+  implementation(libs.play.services.auth)
+  implementation(libs.androidx.credentials)
+  implementation(libs.androidx.credentials.play.services.auth)
+  implementation(libs.googleid)
 
   // Compose
   implementation(libs.androidx.compose.ui)
