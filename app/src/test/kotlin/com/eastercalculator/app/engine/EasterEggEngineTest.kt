@@ -128,4 +128,36 @@ class EasterEggEngineTest {
         assertEquals("god_singularity_core", secondRoll?.id)
         assertEquals(50000, secondRoll?.points)
     }
+
+    @Test
+    fun testRiddlesDoNotDirectlyLeakNumberTarget() {
+        val eggs = easterEggEngine.getAllEasterEggs()
+        val deterministicEggs = eggs.filter { it.rarity != Rarity.GOD_PARTICLE }
+
+        for (egg in deterministicEggs) {
+            // Clues shouldn't have raw spoilers like (1969), (42), (1337), etc.
+            org.junit.Assert.assertFalse(
+                "Yumurta ipucu doğrudan sayı sızıntısı içermemeli: ${egg.id} -> ${egg.hint}",
+                egg.hint.contains("(1969)") ||
+                    egg.hint.contains("(42)") ||
+                    egg.hint.contains("(1337)") ||
+                    egg.hint.contains("(2026)") ||
+                    egg.hint.contains("(2048)")
+            )
+        }
+    }
+
+    @Test
+    fun testDailyAndMonthlyRiddlesGenerated() {
+        val dailyRiddle = easterEggEngine.getDailyRiddle()
+        val monthlyRiddle = easterEggEngine.getMonthlyRiddle()
+
+        assertNotNull(dailyRiddle)
+        org.junit.Assert.assertTrue(dailyRiddle.contains("basamaklı"))
+        org.junit.Assert.assertTrue(dailyRiddle.contains("rakamları toplamı"))
+
+        assertNotNull(monthlyRiddle)
+        org.junit.Assert.assertTrue(monthlyRiddle.contains("basamaklı"))
+        org.junit.Assert.assertTrue(monthlyRiddle.contains("toplamı"))
+    }
 }

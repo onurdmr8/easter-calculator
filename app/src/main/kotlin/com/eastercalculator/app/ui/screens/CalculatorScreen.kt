@@ -178,7 +178,7 @@ fun CalculatorScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Bugünün Gizli Sayısı: ${viewModel.eggRepository.engine.currentDailySecret}\n⚛️ Tanrı Parçacıkları: Her '=' işleminde 20/1 (+50P) ile 100.000/1 (+100.000P) arasında tamamen rastgele oranlarla düşer! '5x Şans' ile olasılığı katlayabilirsin.",
+                            text = "🎯 Günün Gizem Bilmecesi:\n${viewModel.eggRepository.engine.getDailyRiddle()}\n\n⚛️ Tanrı Parçacıkları: Her '=' işleminde 20/1 (+50P) ile 100.000/1 (+100.000P) arasında tamamen rastgele oranlarla düşer! '5x Şans' ile olasılığı katlayabilirsin.",
                             color = Color(0xFFEEEEEE),
                             fontSize = 12.sp,
                             lineHeight = 16.sp
@@ -204,7 +204,7 @@ fun CalculatorScreen(
                                 .padding(horizontal = 10.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = "🎬 Video İzle: Gizli Bir Easter Egg Formülü Öğren!",
+                                text = "🎬 Video İzle: Gizli Bir Bilmece İpucu Aç!",
                                 color = Color(0xFFFFB74D),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold
@@ -296,7 +296,7 @@ fun CalculatorScreen(
                         Text(text = egg.emoji, fontSize = 42.sp)
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "🔓 Gizli Formül İpucu!",
+                            text = "🔓 Gizli Bilmece İpucu!",
                             style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFFFFD700)
@@ -310,7 +310,7 @@ fun CalculatorScreen(
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "Nasıl Bulunur: ${egg.triggerDescription}",
+                            text = "Gizli Bilmece / Görev: ${egg.triggerDescription}",
                             color = Color(0xFF80D8FF),
                             fontSize = 13.sp,
                             textAlign = TextAlign.Center

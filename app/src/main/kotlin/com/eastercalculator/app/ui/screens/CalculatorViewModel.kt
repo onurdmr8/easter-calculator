@@ -48,7 +48,7 @@ class CalculatorViewModel(
 
     private val _uiState = MutableStateFlow(
         CalculatorUiState(
-            dailyHint = "Günün Gizli Sayısı: ${eggRepository.engine.currentDailySecret}"
+            dailyHint = eggRepository.engine.getDailyRiddle()
         )
     )
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()

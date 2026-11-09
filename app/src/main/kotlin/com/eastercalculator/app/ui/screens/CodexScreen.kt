@@ -305,7 +305,7 @@ private fun CodexItemCard(egg: EasterEgg) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = if (egg.isUnlocked) egg.description else "İpucu: ${egg.hint}",
+                    text = if (egg.isUnlocked) egg.description else "Gizem: ${egg.hint}",
                     color = if (egg.isUnlocked) Color(0xFFB0BEC5) else Color(0xFF78909C),
                     fontSize = 12.sp,
                     lineHeight = 16.sp

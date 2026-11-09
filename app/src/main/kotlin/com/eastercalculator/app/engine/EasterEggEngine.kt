@@ -25,6 +25,27 @@ class EasterEggEngine(
         currentMonthlySecret = ((month * 104729 + year) % 89999) + 10000
     }
 
+    fun getDailyRiddle(): String {
+        val num = currentDailySecret
+        val sumDigits = num.toString().map { it.digitToInt() }.sum()
+        val isEven = num % 2 == 0
+        val lowerBound = (num / 1000) * 1000
+        val upperBound = lowerBound + 1000
+        val lastDigit = num % 10
+        val parityText = if (isEven) "çift" else "tek"
+        return "4 basamaklı, $parityText bir sayı. $lowerBound ile $upperBound arasında saklı; rakamları toplamı $sumDigits ve son rakamı $lastDigit!"
+    }
+
+    fun getMonthlyRiddle(): String {
+        val num = currentMonthlySecret
+        val sumDigits = num.toString().map { it.digitToInt() }.sum()
+        val isEven = num % 2 == 0
+        val lowerBound = (num / 10000) * 10000
+        val upperBound = lowerBound + 10000
+        val parityText = if (isEven) "çift" else "tek"
+        return "5 basamaklı kozmik bir $parityText sayı! $lowerBound ile $upperBound arasında saklanıyor; tüm basamaklarının toplamı tam $sumDigits."
+    }
+
     fun getAllEasterEggs(): List<EasterEgg> {
         return listOf(
             // === TANRI PARÇACIKLARI (20/1 - 100.000/1 Rastgele Oran • 50 - 100,000 Puan) ===
@@ -113,8 +134,8 @@ class EasterEggEngine(
                 title = "Altın Paskalya Yumurtası",
                 description = "Tüm gizemlerin başlangıcı! En nadir ve en yüksek puanlı yumurta.",
                 rarity = Rarity.MYTHIC,
-                hint = "Sonucu tam olarak 1,000,000 olan bir işlem yap veya 777777'ye ulaş!",
-                triggerDescription = "Sonuç: 1,000,000 veya 777,777"
+                hint = "Milyonluk kozmik bir hayal kur ya da kumarhane şansının altı kez parıldadığı o devasa sayıya ulaş.",
+                triggerDescription = "Bir milyonun ya da altı adet şanslı yeddinin sırrı."
             ),
             EasterEgg(
                 id = "mythic_celestial_supernova",
@@ -122,8 +143,8 @@ class EasterEggEngine(
                 title = "Kozmik Süpernova",
                 description = "Evrenin en güçlü patlaması ekranına yağıyor!",
                 rarity = Rarity.MYTHIC,
-                hint = "Kutsal Altın Oran'ın (16180) veya 111111'in sırrını çöz.",
-                triggerDescription = "Sonuç: 16180 veya 111111"
+                hint = "Doğanın kutsal Altın Oranını on binlerle genişlet ya da yan yana altı birliğin kozmik hizalanmasını bul.",
+                triggerDescription = "Kutsal Altın Oran (Fi) sabitinin 10.000 katı veya ardışık 6 tane bir."
             ),
             EasterEgg(
                 id = "mythic_monthly_secret",
@@ -131,8 +152,8 @@ class EasterEggEngine(
                 title = "Aylık Gizem Kupası",
                 description = "Bu aya özel rastgele üretilen gizli anahtarı keşfettin!",
                 rarity = Rarity.MYTHIC,
-                hint = "Bu ayın gizli sayısı: $currentMonthlySecret. Bu sonuca ulaş!",
-                triggerDescription = "Aylık Gizli Sonuç: $currentMonthlySecret"
+                hint = getMonthlyRiddle(),
+                triggerDescription = "Bu ayın kozmik matematik bilmecesini çöz."
             ),
 
             // === EPIC (%7 Oran - 1,500 Puan) ===
@@ -142,8 +163,8 @@ class EasterEggEngine(
                 title = "Kozmik Karadelik",
                 description = "Evrenin kurallarını büktün! Sıfıra bölmek bir karadelik açtı.",
                 rarity = Rarity.EPIC,
-                hint = "42 veya herhangi bir sayıyı sıfıra bölmeyi dene...",
-                triggerDescription = "Sıfıra Bölme: ÷ 0"
+                hint = "Matematiğin en büyük yasağını çiğne: Sayıları hiçliğin ta kendisine bölmeyi dene...",
+                triggerDescription = "Matematiksel tekillik: Bir sayıyı sıfıra bölme cüreti."
             ),
             EasterEgg(
                 id = "epic_dragon",
@@ -151,8 +172,8 @@ class EasterEggEngine(
                 title = "Kızıl Ejderha",
                 description = "Alev püskürten kadim ejderha hesap makinesini ele geçirdi!",
                 rarity = Rarity.EPIC,
-                hint = "Dokuzların gazabı: Sonucu tam 99999 olan bir işlem bul.",
-                triggerDescription = "Sonuç: 99999"
+                hint = "Dokuzların gazabı: Beş basamaklı en büyük tek sayının ejderha alevini yakala.",
+                triggerDescription = "En büyük 5 basamaklı tek sayının ejderha ateşi."
             ),
             EasterEgg(
                 id = "epic_chronos",
@@ -160,8 +181,8 @@ class EasterEggEngine(
                 title = "Zamanın Efendisi",
                 description = "Zaman döngüsünü kırdın!",
                 rarity = Rarity.EPIC,
-                hint = "İçinde bulunduğumuz yılı (2026) bir işlem sonucu olarak bul.",
-                triggerDescription = "Sonuç: 2026"
+                hint = "Zaman çizgisinde tam da şu an içinde yaşadığımız yılı bir işlem sonucu olarak üret.",
+                triggerDescription = "İçinde yaşadığımız şimdiki zamanın yılı."
             ),
             EasterEgg(
                 id = "epic_wizard_ladder",
@@ -169,8 +190,8 @@ class EasterEggEngine(
                 title = "Büyücü Merdiveni",
                 description = "Sıralı sayıların mistik harmonisi!",
                 rarity = Rarity.EPIC,
-                hint = "1'den 5'e sıralı bir sayıya ulaş (12345).",
-                triggerDescription = "Sonuç: 12345 veya 54321"
+                hint = "Büyücünün kulesine çıkan veya inen 5 basamaklı kusursuz basamak merdivenini inşa et.",
+                triggerDescription = "1'den 5'e yükselen veya alçalan ardışık basamaklar."
             ),
 
             // === RARE (%15 Oran - 600 Puan) ===
@@ -180,8 +201,8 @@ class EasterEggEngine(
                 title = "Günün Gizli Kodu",
                 description = "Bugünün rastgele belirlenen gizli hedefini vurdun!",
                 rarity = Rarity.RARE,
-                hint = "Günün gizli hedef sayısı: $currentDailySecret. Bu sayıya ulaş!",
-                triggerDescription = "Günün Hedefi: $currentDailySecret"
+                hint = getDailyRiddle(),
+                triggerDescription = "Bugünün matematiksel gizem hedefini yakala."
             ),
             EasterEgg(
                 id = "rare_leet_hacker",
@@ -189,8 +210,8 @@ class EasterEggEngine(
                 title = "1337 Elite Hacker",
                 description = "Sisteme sızıldı! Klasik hacker kodu aktif.",
                 rarity = Rarity.RARE,
-                hint = "Eski usül siber alemin en meşhur sayısını hesapla (1337).",
-                triggerDescription = "Sonuç: 1337"
+                hint = "Eski siber dünyanın ve hacker kültürünün efsanevi 'Elite' (L-E-E-T) şifresini hesapla.",
+                triggerDescription = "Siber alemin kutsal 'LEET' kodu."
             ),
             EasterEgg(
                 id = "rare_pi_infinite",
@@ -198,8 +219,8 @@ class EasterEggEngine(
                 title = "Pi Sonsuzluğu",
                 description = "Dairenin kadim sırrı ekranı kaplıyor.",
                 rarity = Rarity.RARE,
-                hint = "Pi sayısının ilk basamaklarına ulaş (3.14 veya 3.1415).",
-                triggerDescription = "Sonuç: 3.14 veya 3.1415"
+                hint = "Bir çemberin çevresini çapına böldüğünde evrenin en meşhur irrasyonel sabitini keşfedersin.",
+                triggerDescription = "Dairenin kadim sırrı: Pi sayısının ilk basamakları."
             ),
             EasterEgg(
                 id = "rare_unicorn",
@@ -207,8 +228,8 @@ class EasterEggEngine(
                 title = "Tekboynuz Mucizesi",
                 description = "Gökkuşağı diyarından gelen saf enerji!",
                 rarity = Rarity.RARE,
-                hint = "Dört tane 8'in yan yana geldiği bir sonuç elde et (8888).",
-                triggerDescription = "Sonuç: 8888"
+                hint = "Uzak Doğu kültüründe sonsuz bolluk ve bereket getiren dörtlü sekizlerin mucizesi...",
+                triggerDescription = "Bolluk getiren dört basamaklı bereket sayısı."
             ),
             EasterEgg(
                 id = "rare_area_51",
@@ -216,8 +237,8 @@ class EasterEggEngine(
                 title = "51. Bölge Uçan Dairesi",
                 description = "Dünya dışı sinyaller tespit edildi!",
                 rarity = Rarity.RARE,
-                hint = "51 x 51 işlemini çöz veya 2601 sonucuna ulaş.",
-                triggerDescription = "İşlem: 51 × 51 veya Sonuç 2601"
+                hint = "Nevada çölündeki en gizli dünya dışı askeri araştırma bölgesinin numarasını kendisiyle çarp.",
+                triggerDescription = "Gizli UFO üssünün karesi."
             ),
 
             // === UNCOMMON (%25 Oran - 250 Puan) ===
@@ -227,8 +248,8 @@ class EasterEggEngine(
                 title = "Aya Yolculuk",
                 description = "Roketler ateşlendi! Ay'a ilk ayak basılan yıl.",
                 rarity = Rarity.UNCOMMON,
-                hint = "Ay'a ilk insan ne zaman indi? (1969).",
-                triggerDescription = "Sonuç: 1969"
+                hint = "Apollo 11'in 'İnsan için küçük, insanlık için dev bir adım' attığı tarihi yılı hesapla.",
+                triggerDescription = "İnsanoğlunun Ay yüzeyine ilk ayak bastığı tarihi yıl."
             ),
             EasterEgg(
                 id = "uncommon_diamond",
@@ -236,8 +257,8 @@ class EasterEggEngine(
                 title = "Kusursuz Elmas",
                 description = "Göz kamaştırıcı pırlanta yağmuru!",
                 rarity = Rarity.UNCOMMON,
-                hint = "Binlik kilometre taşı: Sonucu tam 1000 yap.",
-                triggerDescription = "Sonuç: 1000"
+                hint = "Metrik sistemin 'kilo' öneki: Tam bir binlik cevhere ulaş.",
+                triggerDescription = "Dört basamaklı ilk kusursuz binlik kilometre taşı."
             ),
             EasterEgg(
                 id = "uncommon_d20",
@@ -245,8 +266,8 @@ class EasterEggEngine(
                 title = "Kritik Vuruş (Natural 20)",
                 description = "Zarlar senin için en yüksek sayıyı attı!",
                 rarity = Rarity.UNCOMMON,
-                hint = "Masaüstü RPG oyunlarının en kritik zarı: 20.",
-                triggerDescription = "Sonuç: 20"
+                hint = "Masaüstü RPG oyunlarında en kritik vuruşu (Natural Hit) sağlayan 20 yüzlü zarın zirvesi.",
+                triggerDescription = "D&D masasında kritik vuruş sağlayan en büyük zar sonucu."
             ),
             EasterEgg(
                 id = "uncommon_retro_game",
@@ -254,8 +275,8 @@ class EasterEggEngine(
                 title = "Retro 2048",
                 description = "Klasik 2048 karelerinin nostaljisi!",
                 rarity = Rarity.UNCOMMON,
-                hint = "İkinin 11. kuvveti olan o meşhur oyun sayısı: 2048.",
-                triggerDescription = "Sonuç: 2048"
+                hint = "Kareleri kaydırıp birleştirdiğin retro bulmaca oyununda 2'nin 11. kuvvetine ulaş.",
+                triggerDescription = "Popüler retro kaydırma oyununun nihai hedefi."
             ),
             EasterEgg(
                 id = "uncommon_crystal_ball",
@@ -263,8 +284,8 @@ class EasterEggEngine(
                 title = "Evrenin Anlamı",
                 description = "Otostopçunun Galaksi Rehberi'ne göre tüm soruların cevabı.",
                 rarity = Rarity.UNCOMMON,
-                hint = "Hayat, evren ve her şeye dair nihai cevap: 42.",
-                triggerDescription = "Sonuç: 42"
+                hint = "Otostopçunun Galaksi Rehberi'ne göre 'Hayat, evren ve her şeye dair nihai cevap'...",
+                triggerDescription = "Derin Düşünce bilgisayarının bulduğu nihai cevap."
             ),
 
             // === COMMON (%50 Oran - 100 Puan) ===
@@ -274,8 +295,8 @@ class EasterEggEngine(
                 title = "Şanslı 777",
                 description = "Casino zilleri çalıyor! Şans kapını çaldı.",
                 rarity = Rarity.COMMON,
-                hint = "Üç tane uğurlu 7'nin yan yana gelmesi (777).",
-                triggerDescription = "Sonuç: 777"
+                hint = "Kumarhane slot makinelerinin en büyük ikramiyesini saçan üçlü şans sayısı...",
+                triggerDescription = "Slot makinelerinin üçlü ikramiye sembolü."
             ),
             EasterEgg(
                 id = "common_clover",
@@ -283,8 +304,8 @@ class EasterEggEngine(
                 title = "Dört Yapraklı Yonca",
                 description = "Bugün senin şanslı günün!",
                 rarity = Rarity.COMMON,
-                hint = "En basit şans sayısı: 4.",
-                triggerDescription = "Sonuç: 4"
+                hint = "Çimlerin arasında nadiren denk gelinen o şanslı yoncanın yaprak sayısı...",
+                triggerDescription = "En klasik uğur getiren yonca yaprağı sayısı."
             ),
             EasterEgg(
                 id = "common_pizza",
@@ -292,8 +313,8 @@ class EasterEggEngine(
                 title = "Pizza Dilimi",
                 description = "360 derecelik pizzayı 8 arkadaş eşit paylaştı!",
                 rarity = Rarity.COMMON,
-                hint = "360'ı 8'e böl (45).",
-                triggerDescription = "Sonuç: 45"
+                hint = "Tam dairesel bir pizzayı 8 arkadaş eşit paylaştığında bir dilimin merkez açısı...",
+                triggerDescription = "360 derecenin sekizde bir dilimi."
             ),
             EasterEgg(
                 id = "common_coffee_404",
@@ -301,8 +322,8 @@ class EasterEggEngine(
                 title = "Hata 404: Kahve Bulunamadı",
                 description = "Biraz kahve molası verme zamanı geldi.",
                 rarity = Rarity.COMMON,
-                hint = "İnternetin en meşhur hata kodu (404).",
-                triggerDescription = "Sonuç: 404"
+                hint = "İnternette arayıp da bulamadığın kayıp web sayfalarının evrensel protokol kodu...",
+                triggerDescription = "İnternet dünyasının en meşhur sayfa bulunamadı hatası."
             ),
             EasterEgg(
                 id = "common_gravity_apple",
@@ -310,8 +331,8 @@ class EasterEggEngine(
                 title = "Newton'un Elması",
                 description = "Kafana bir elma düştü ve yerçekimini keşfettin!",
                 rarity = Rarity.COMMON,
-                hint = "Dünya'nın yerçekimi ivmesi: 9.8 veya 9.81.",
-                triggerDescription = "Sonuç: 9.8 veya 9.81"
+                hint = "Newton'un başına düşen elmanın yeryüzüne doğru hızlandığı o meşhur ivme sabiti...",
+                triggerDescription = "Dünya'nın standart yerçekimi ivmesi."
             )
         )
     }
