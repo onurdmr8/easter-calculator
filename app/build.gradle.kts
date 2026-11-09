@@ -12,14 +12,30 @@ android {
     applicationId = "com.eastercalculator.app"
     minSdk = 24
     targetSdk = 35
-    versionCode = 2
-    versionName = "1.0.1"
+    versionCode = 3
+    versionName = "1.3.1"
+  }
+
+  signingConfigs {
+    create("release") {
+      val keystoreFile = rootProject.file("release-keystore.jks")
+      if (keystoreFile.exists()) {
+        storeFile = keystoreFile
+        storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "EasterCalc2026!"
+        keyAlias = System.getenv("KEY_ALIAS") ?: "eastercalculator"
+        keyPassword = System.getenv("KEY_PASSWORD") ?: "EasterCalc2026!"
+      }
+    }
   }
 
   buildTypes {
     release {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+      val keystoreFile = rootProject.file("release-keystore.jks")
+      if (keystoreFile.exists()) {
+        signingConfig = signingConfigs.getByName("release")
+      }
     }
   }
   compileOptions {
