@@ -13,10 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EasterCalculator">
 
-        <!-- Sample AdMob App ID for testing. Replace with production AdMob App ID when publishing -->
+        <!-- Official AdMob App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-3207706111232143~7776096317" />
 
         <activity
             android:name=".MainActivity"

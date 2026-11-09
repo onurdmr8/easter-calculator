@@ -18,7 +18,7 @@ import com.google.android.gms.ads.AdView
 @Composable
 fun AdBannerView(
     modifier: Modifier = Modifier,
-    adUnitId: String = AdManager.TEST_BANNER_ID
+    adUnitId: String = AdManager.BANNER_AD_UNIT_ID
 ) {
     Box(
         modifier = modifier

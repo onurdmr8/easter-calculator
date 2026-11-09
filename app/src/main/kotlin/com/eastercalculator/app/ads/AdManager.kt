@@ -17,9 +17,9 @@ import kotlinx.coroutines.flow.asStateFlow
 object AdManager {
     private const val TAG = "AdManager"
 
-    // Google AdMob official test IDs for development and safe Play Store testing
-    const val TEST_BANNER_ID = "ca-app-pub-3940256099942544/6300978111"
-    const val TEST_REWARDED_ID = "ca-app-pub-3940256099942544/5224354917"
+    // Official AdMob Ad Unit IDs
+    const val BANNER_AD_UNIT_ID = "ca-app-pub-3207706111232143/1372525401"
+    const val REWARDED_AD_UNIT_ID = "ca-app-pub-3207706111232143/4510979584"
 
     private var rewardedAd: RewardedAd? = null
     private var isAdLoading = false
@@ -45,7 +45,7 @@ object AdManager {
         val request = AdRequest.Builder().build()
         RewardedAd.load(
             context,
-            TEST_REWARDED_ID,
+            REWARDED_AD_UNIT_ID,
             request,
             object : RewardedAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedAd) {
